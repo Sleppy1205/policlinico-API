@@ -1,0 +1,20 @@
+# Dependencias — no subir al repositorio (son muy pesadas)
+node_modules/
+
+# Archivos compilados — se generan con npm run build
+dist/
+
+# Variables de entorno — NUNCA subir al repositorio (contiene contraseñas)
+.env
+
+# Logs y caché
+*.log
+.npm
+npm-debug.log*
+
+# Editor
+.vscode/
+.idea/
+
+# TypeScript incremental build
+*.tsbuildinfo
