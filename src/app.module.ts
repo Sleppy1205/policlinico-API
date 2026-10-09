@@ -1,54 +1,56 @@
 // ============================================
-// app.module.ts
-// Módulo raíz de la aplicación.
-// Aquí se importan todos los módulos y se
-// configura la conexión a la base de datos PostgreSQL.
+// Cambios principales:
+//   - synchronize: FALSE (ahora se usan migraciones)
+//   - Se importa AuthModule para JWT
+//   - Se agregan las migraciones al DataSource
 // ============================================
 
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-// Importación de todos los módulos de negocio
+// Módulos de negocio
 import { UsuariosModule }    from './usuarios/usuarios.module';
 import { PacientesModule }   from './pacientes/pacientes.module';
 import { CitasModule }       from './citas/citas.module';
 import { HistorialesModule } from './historiales/historiales.module';
+import { AuthModule }        from './auth/auth.module';
 
 @Module({
   imports: [
-    // ---- Módulo de configuración ----
-    // Lee el archivo .env automáticamente
-    // isGlobal: true → disponible en toda la app sin reimportar
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    // ConfigModule — lee el archivo .env globalmente
+    ConfigModule.forRoot({ isGlobal: true }),
 
-    // ---- Configuración de PostgreSQL con TypeORM ----
-    // useFactory inyecta ConfigService para leer las variables de entorno
+    // TypeORM con PostgreSQL — configurado de forma asíncrona
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      inject: [ConfigService],
+      inject:  [ConfigService],
       useFactory: (config: ConfigService) => ({
-        type: 'postgres',
+        type:     'postgres',
         host:     config.get<string>('DB_HOST', 'localhost'),
         port:     config.get<number>('DB_PORT', 5432),
         username: config.get<string>('DB_USER', 'postgres'),
         password: config.get<string>('DB_PASSWORD', ''),
         database: config.get<string>('DB_NAME', 'policlinico_uleam'),
-        // autoLoadEntities: carga automáticamente las entidades registradas en cada módulo
         autoLoadEntities: true,
-        // synchronize: crea/actualiza las tablas automáticamente según las entidades
-        // SOLO usar en desarrollo — en producción usar migraciones
-        synchronize: config.get<boolean>('DB_SYNC', true),
+
+        // synchronize: FALSE — obligatorio en Etapa 2
+        // Las tablas se manejan con migraciones, no automáticamente
+        synchronize: false,
+
+        // Apunta a la carpeta de migraciones
+        migrations: [__dirname + '/migrations/*{.ts,.js}'],
       }),
     }),
 
-    // ---- Módulos de negocio ----
+    // Módulos de negocio
     UsuariosModule,
     PacientesModule,
     CitasModule,
     HistorialesModule,
+
+    // NUEVO Etapa 2 — Autenticación JWT
+    AuthModule,
   ],
 })
 export class AppModule {}
