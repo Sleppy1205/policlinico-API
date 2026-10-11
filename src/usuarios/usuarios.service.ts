@@ -46,6 +46,11 @@ export class UsuariosService {
     return usuario;
   }
 
+  // ---- OBTENER POR EMAIL ----
+  async obtenerPorEmail(email: string): Promise<Usuario | null> {
+    return this.usuariosRepo.findOneBy({ email });
+  }
+
   // ---- CREAR ----
   // POST /api/usuarios
   async crear(dto: CrearUsuarioDto): Promise<Usuario> {
