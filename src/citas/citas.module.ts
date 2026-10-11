@@ -1,7 +1,3 @@
-// ============================================
-// citas.module.ts — Módulo de Citas
-// ============================================
-
 import { Module } from '@nestjs/common';
 import { TypeOrmModule }   from '@nestjs/typeorm';
 import { Cita }            from './cita.entity';

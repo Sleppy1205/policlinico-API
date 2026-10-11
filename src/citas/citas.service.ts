@@ -1,8 +1,3 @@
-// ============================================
-// citas.service.ts
-// Servicio de Citas Médicas.
-// ============================================
-
 import {
   Injectable, NotFoundException, BadRequestException, ConflictException,
 } from '@nestjs/common';

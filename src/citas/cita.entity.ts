@@ -1,9 +1,3 @@
-// archivo pendiente - myke// ============================================
-// cita.entity.ts
-// Entidad Cita — tabla "citas".
-// Representa una cita médica entre un paciente y un médico.
-// ============================================
-
 import {
   Entity, PrimaryGeneratedColumn, Column,
   ManyToOne, JoinColumn, CreateDateColumn,
